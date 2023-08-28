@@ -469,7 +469,7 @@ end
       for i, tile in pairs(world:getTiles()) do
        if tile.fg == seedid and tile:canHarvest() and inventory:getItemCount(seedid-1) < 165 then
    if world:hasAccess(tile.x,tile.y) then
-    getBot():getBot():findPath(tile.x, tile.y)
+    getBot():findPath(tile.x, tile.y)
           while world:getTile(tile.x,tile.y).fg == seedid and tile:canHarvest() do
             sleep(20)
             getBot():hit(tile.x,tile.y)
