@@ -35,6 +35,12 @@ checknya = false
 widreal = ""
 metotone = false
 
+randomPack = math.random(1, #WorldSavePack)
+randomSeed = math.random(1, #WorldSaveSeed)
+
+IndexSavePack = randomPack
+IndexSaveSeed = randomSeed
+
 if OwnerName == "" then
 return
 end
@@ -1136,7 +1142,8 @@ function joinworld()
 botshow("World Finish, Joining World...")
     sleep(100)
     for _,bimba in pairs(WorldForJoin) do
-        warpdoang(bimba,"")
+      anjay = math.random(1, #WorldForJoin)
+        warpdoang(anjay,"")
         sleep(4000)
     end
 end
@@ -1180,21 +1187,27 @@ posY = ybot + 1
 if not IgnoreGems then
 getBot().ignore_gems = false
 end
-if world:getTile(1,ybot).fg == 0 then
+if world:getTile(1,ybot).fg == 0 or world:getTile(0,ybot).fg == 0 then
     getBot():findPath(1,ybot)
     sleep(100)
+posX = 2
+posY = ybot + 1
 end
-if world:getTile(1,ybot).fg ~= 0 and not SoilFarmMode then
+if world:getTile(1,ybot).fg ~= 0 or world:getTile(0,ybot).fg ~= 0 then
+if not SoilFarmMode then
 posX = 2
 posY = 6
 getBot():findPath(1,5)
 sleep(100)
 end
-if world:getTile(1,ybot).fg ~= 0 and SoilFarmMode then
+end
+if world:getTile(1,ybot).fg ~= 0 or world:getTile(0,ybot).fg ~= 0 then
+if SoilFarmMode then
 posX = 2
 posY = 7
 getBot():findPath(1,6)
 sleep(100)
+end
 end
     while inventory:getItemCount(seedid - 1) > 0 and inventory:getItemCount(seedid) < 200 do
       reconnect(posX - 1, posY - 1)
@@ -1561,12 +1574,7 @@ atas = getBot():getWorld().name
     hasilseed = 200
     botpack("Success Saving Seeds") 
     hasilseed = 0
-    IndexSaveSeed = IndexSaveSeed + 1
-
-    if IndexSaveSeed > #WorldSaveSeed then
-        IndexSaveSeed = 1
-    end
-
+IndexSaveSeed = randomSeed
     warp(rumah, widreal)
 end
 
@@ -1596,10 +1604,7 @@ rara = SeedsScanner(packitemid[1])
      hasilpack = math.abs(rara - totalpack)
         botpack("Done Droping Pack, Back To Farm...")
   hasilpack = 0
-   IndexSavePack = IndexSavePack + 1
-  if IndexSavePack > #WorldSavePack then
- IndexSavePack = 1
- end
+IndexSavePack = randomPack
     warp(woloy,widreal)
 end
 
