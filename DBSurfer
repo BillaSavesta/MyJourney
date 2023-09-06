@@ -1701,7 +1701,6 @@ clearTable(processedTimes)
 seedid = detect()
 botshow("Bot Start")
 getBot().collect_range = 4
-getBot().move_interval = 7
 antiToxic()
 tt = os.time()
 gemsawal = getBot().gem_count
