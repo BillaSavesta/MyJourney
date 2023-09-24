@@ -1,5 +1,23 @@
 velisha = true
 inventory = getBot():getInventory()
+checknya = false
+
+if not checknya then
+httpClient = HttpClient.new()
+httpClient:setMethod(Method.get)
+httpClient.url = "https://rentry.co/Viawdamw/raw"
+httpClient.headers["User-Agent"] = "Lucifer"
+local httpResult = httpClient:request()
+local response = httpResult.body
+
+if string.find(response, OwnerName) then
+checknya = true
+else
+TagBan("**OwnerName Not Found , Please Use Command First Then Run The Script ** @everyone")
+print("Failed To Get OwnerName Data")
+return
+end
+end
 
 startbot = 1
 
