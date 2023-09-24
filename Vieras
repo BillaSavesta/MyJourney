@@ -45,8 +45,10 @@ PackIdList = BotList[searchName].PackIdList
 function warp(world,id)
 getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
 sleep(5000)
+while getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx/32),math.floor(getBot():getWorld():getLocal().posy/32)).fg == 6 do
 getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
 sleep(5000)
+end
 end
 
 function SeedsScanner(ItemID)
