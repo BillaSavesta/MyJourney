@@ -1,0 +1,177 @@
+velisha = true
+inventory = getBot():getInventory()
+
+startbot = 1
+
+for index, botname in pairs(getAllBot()) do
+   if botname:getLocal().name:upper() == getBot():getLocal().name:upper() then
+      searchName = index + ( startbot - 1 )
+      break
+   end
+end
+
+ItemID = BotList[searchName].ItemID
+WorldTake = BotList[searchName].WorldTake
+WorldTakeID = BotList[searchName].WorldTakeID
+WorldDrop = BotList[searchName].WorldDrop
+WorldDropID = BotList[searchName].WorldDropID
+PatokanDropID = BotList[searchName].PatokanDropID
+UsePackMode = BotList[searchName].UsePackMode
+PackIdList = BotList[searchName].PackIdList
+
+function warp(world,id)
+getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
+sleep(5000)
+getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
+sleep(5000)
+end
+
+function SeedsScanner(ItemID)
+local kiwar = 0
+    for _, object in pairs(getBot():getWorld():getObjects()) do 
+        if object.id == ItemID then
+      kiwar = kiwar + object.count
+        end
+    end
+return kiwar
+end
+
+
+function round(n)
+    return n % 1 > 0.5 and math.ceil(n) or math.floor(n)
+end
+
+
+function CekTilePack(x,y,num)
+    local count = 0
+    local stack = 0
+    for _,obj in pairs(getBot():getWorld():getObjects()) do
+        if round(obj.x / 32) == x and math.floor(obj.y / 32) == y then
+            count = count + obj.count
+            stack = stack + 1
+        end
+    end
+    if stack < 15 and count <= (3800 - num) then
+        return true
+    end
+    return false
+end
+
+function CekTilePack2(x,y)
+    local count = 0
+    local stack = 0
+    for _,obj in pairs(getBot():getWorld():getObjects()) do
+        if round(obj.x / 32) == x and math.floor(obj.y / 32) == y then
+            count = count + obj.count
+            stack = stack + 1
+        end
+    end
+return count
+end
+
+
+function takeitem(id)
+    while inventory:getItemCount(id) == 0 do
+        for _,obj in pairs(getBot():getWorld():getObjects()) do
+            if obj.id == id then
+                getBot():findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
+                sleep(1000)
+                getBot().auto_collect = true
+            end
+            if inventory:getItemCount(id) > 0 then
+              getBot().auto_collect = false
+                break
+            end
+        end
+    end
+end
+
+function takeitem2()
+for _, id in pairs(PackIdList) do
+        for _,obj in pairs(getBot():getWorld():getObjects()) do
+            if obj.id == id then
+             if obj.count > 0 then
+                getBot():findPath(math.floor(obj.x / 32),math.floor(obj.y / 32))
+                sleep(1000)
+                getBot().auto_collect = true
+            end
+            end
+            if inventory:getItemCount(id) > 0 then
+              getBot().auto_collect = false
+                break
+            end
+        end
+    end
+end
+
+function savecuy2()
+maxmove = #PackIdList
+totalmove = 0
+totalkeatas = 1
+posisix = math.floor(getBot():getWorld():getLocal().posx/32)
+posisiy = math.floor(getBot():getWorld():getLocal().posy/32)
+for _, pack in pairs(PackIdList) do
+while inventory:getItemCount(pack) > 0 do
+sleep(200)
+if CekTilePack2(math.floor(getBot():getWorld():getLocal().posx/32+1),math.floor(getBot():getWorld():getLocal().posy/32)) > 200 or CekTilePack2(math.floor(getBot():getWorld():getLocal().posx/32+1),math.floor(getBot():getWorld():getLocal().posy/32)) == 200 then
+getBot():moveRight()
+sleep(200)
+totalmove = totalmove + 1
+if totalmove == maxmove then
+getBot():findPath(posisix,posisiy-"..totalkeatas..")
+sleep(200)
+totalkeatas = totalkeatas + 1
+totalmove = 0
+end
+end
+print(CekTilePack2(math.floor(getBot():getWorld():getLocal().posx/32+1),math.floor(getBot():getWorld():getLocal().posy/32)))
+getBot():moveRight()
+sleep(200)
+getBot():drop(pack,inventory:getItemCount(pack))
+sleep(3000)
+end
+end
+end
+
+
+function savecuy()
+        for _,tile in ipairs(getBot():getWorld():getTiles()) do
+            if tile.fg == PatokanDropID or tile.bg == PatokanDropID then
+                if CekTilePack(tile.x,tile.y,inventory:getItemCount(ItemID)) then
+                    while math.floor(getBot():getWorld():getLocal().posx / 32) ~= (tile.x - 1) or math.floor(getBot():getWorld():getLocal().posy / 32) ~= tile.y do
+                        getBot():findPath(tile.x - 1,tile.y)
+                        sleep(500)
+                    end
+                    while inventory:getItemCount(ItemID) > 0 and CekTilePack(tile.x,tile.y,inventory:getItemCount(ItemID)) do
+                        getBot():sendPacket(2,"action|drop\n|itemID|"..ItemID)
+                        sleep(1000)
+                        getBot():sendPacket(2,"action|dialog_return\ndialog_name|drop_item\nitemID|"..ItemID.."|\ncount|"..inventory:getItemCount(ItemID))
+                        sleep(1000)
+                    end
+                end
+            end
+            if inventory:getItemCount(ItemID) == 0 then
+                break
+            end
+        end
+    end
+
+
+function jalan()
+while velisha do
+warp(WorldTake,WorldTakeID)
+if not UsePackMode then
+takeitem(ItemID)
+else
+takeitem2()
+end
+warp(WorldDrop,WorldDropID)
+if not UsePackMode then
+savecuy()
+else
+savecuy2()
+end
+end
+end
+
+jalan()
