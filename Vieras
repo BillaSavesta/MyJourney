@@ -3,7 +3,7 @@ inventory = getBot():getInventory()
 
 startbot = 1
 
-for index, botname in pairs(getAllBot()) do
+for index, botname in pairs(getBots()) do
    if botname:getLocal().name:upper() == getBot():getLocal().name:upper() then
       searchName = index + ( startbot - 1 )
       break
