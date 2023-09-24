@@ -2,6 +2,10 @@ velisha = true
 inventory = getBot():getInventory()
 checknya = false
 
+if OwnerName = "" then
+return
+end
+
 if not checknya then
 httpClient = HttpClient.new()
 httpClient:setMethod(Method.get)
