@@ -1,8 +1,9 @@
+
 velisha = true
 inventory = getBot():getInventory()
 checknya = false
 
-if OwnerName = "" then
+if OwnerName == "" then
 return
 end
 
@@ -26,7 +27,7 @@ end
 startbot = 1
 
 for index, botname in pairs(getBots()) do
-   if botname:getLocal().name:upper() == getBot():getLocal().name:upper() then
+   if botname.name:upper() == getBot().name:upper() then
       searchName = index + ( startbot - 1 )
       break
    end
