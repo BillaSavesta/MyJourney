@@ -18,7 +18,7 @@ local response = httpResult.body
 if string.find(response, OwnerName) then
 checknya = true
 else
-TagBan("**OwnerName Not Found , Please Use Command First Then Run The Script ** @everyone")
+print("**OwnerName Not Found , Please Use Command First Then Run The Script ** @everyone")
 print("Failed To Get OwnerName Data")
 return
 end
