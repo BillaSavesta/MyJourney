@@ -6,7 +6,7 @@ berlian = {}
 pohon = {}
 worlds = {}
 t = os.time()	
-loop = 0
+totalloop = 0
 bw = 0
 gemsawal = 0
 gemssave = 0
@@ -25,24 +25,49 @@ proxyIndexAddAttempt = 0
 fire = false
 BpCek = false
 growidIndex = 1
-IndexSavePack = 1
-IndexSaveSeed = 1
 emoji = ""
-world = getBot():getWorld() 
-inventory = getBot():getInventory()
-loopnya = 0
 checknya = false
 widreal = ""
 metotone = false
+modefloat = false
+awal = false
+world = getBot():getWorld() 
+inventory = getBot():getInventory()
 
-randomPack = math.random(1, #WorldSavePack)
-randomSeed = math.random(1, #WorldSaveSeed)
+startslotbot = 1
 
-IndexSavePack = randomPack
-IndexSaveSeed = randomSeed
+for index, namebotx in pairs(getBots()) do
+   if namebotx.name:upper() == getBot().name:upper() then
+      rulah = index + ( startslotbot - 1 )
+      break
+   end
+end
+
 
 if OwnerName == "" then
+print("Plase Write Your OwnerName")
 return
+end
+
+function generateRandomText(length, letters, botId)
+    local text = ""
+    for i = 1, length do
+        local randomValue = math.random()
+        local randomIndex = math.floor(randomValue * #letters) + 1
+        local adjustedIndex = (randomIndex + botId - 1) % #letters + 1
+        local randomChar = letters[adjustedIndex]
+        text = text .. randomChar
+    end 
+    return text
+end
+
+function getRandom(table)
+    letters = table
+    countNumber = 1
+    botId = rulah
+    math.randomseed(os.time())
+    hasil = generateRandomText(countNumber, letters, botId)
+    return hasil
 end
 
 function TagBan(text)
@@ -76,26 +101,195 @@ return
 end
 end
 
-startslotbot = 1
+function generateName()
+    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    local numbers = "0123456789"
+    local charset = chars .. numbers
 
-for index, namebotx in pairs(getBots()) do
-   if namebotx.name:upper() == getBot().name:upper() then
-      rulah = index + ( startslotbot - 1 )
-      break
-   end
+    local randomText = ""
+
+    for _ = 1, LengthName do
+        local randomIndex = math.random(1, #charset)
+        local randomChar = charset:sub(randomIndex, randomIndex)
+        randomText = randomText .. randomChar
+    end
+
+    return randomText
+end
+
+if AutoAddBot then
+  if AutoAddBotType == "LOGINGUEST" then
+    for i = 1, #ListBotAdd do
+      if not UseProxyToAdd then
+        local mac, rid = string.match(GuestList[i], "([^|]+)|([^|]+)")
+        addBot(generateName(), mac, rid)
+        sleep(5000)
+        
+        if getBot().status ~= 1 then
+          repeat
+            getBot():connect()
+            sleep(8000)
+          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+          
+          if getBot().status == 3 or getBot().status == 4 then
+            removeBot(getBot().name)
+          end
+          
+          if getBot().status == 1 then
+          end
+        end
+      else
+        local mac, rid = string.match(GuestList[i], "([^|]+)|([^|]+)")
+        addProxy(ProxyList[proxyIndexAdd])
+        addBot(generateName(), mac, rid)
+        sleep(5000)
+        
+        if getBot().status ~= 1 then
+          repeat
+            getBot():connect()
+            sleep(8000)
+          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+          
+          if getBot().status == 3 or getBot().status == 4 then
+            removeBot(getBot().name)
+          end
+          
+          if getBot().status == 1 then
+          end
+     end
+            
+         proxyIndexAddAttempt = proxyIndexAddAttempt + 1
+            if proxyIndexAddAttempt == MaxBotPerProxy then
+              if proxyIndexAdd <= #ProxyList then
+                proxyIndexAdd = proxyIndexAdd + 1
+                proxyIndexAddAttempt = 0
+              else
+                TagBan("**No More Socks Can Be Used For Adding Bot, Please Check It ** @everyone ")
+              end
+            end
+          end
+        end
+print("Please Turn Off Auto Add, Select All And Run The Sc Again")
+return 
+      end
+end
+
+
+if AutoAddBot then
+  if AutoAddBotType == "NORMAL" then
+    for i = 1, #ListBotAdd do
+      if not UseProxyToAdd then
+        PwBot = string.match(ListBotAdd[i], ":(.+)")
+        BotName =  string.match(ListBotAdd[i], "([^:]+)")
+        addBot(BotName, PwBot)
+        sleep(5000)
+        if getBot().status ~= 1 then
+          repeat
+            getBot():connect()
+            sleep(8000)
+          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+          if getBot().status == 3 or getBot().status == 4 then
+          removeBot(getBot().name)
+          end
+          if getBot().status == 1 then
+          end
+        end
+      else
+        PwBot = string.match(ListBotAdd[i], ":(.+)")
+        BotName =  string.match(ListBotAdd[i], "([^:]+)")
+        addProxy(ProxyList[proxyIndexAdd])
+        addBot(BotName, PwBot)
+        sleep(5000)
+        if getBot().status ~= 1 then
+          repeat
+            getBot():connect()
+            sleep(8000)
+          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+          if getBot().status == 3 or getBot().status == 4 then
+          removeBot(getBot().name)
+          end
+          if getBot().status == 1 then
+          end
+        end
+        proxyIndexAddAttempt = proxyIndexAddAttempt + 1
+        if proxyIndexAddAttempt == MaxBotPerProxy then
+          if proxyIndexAdd <= #ProxyList then
+            proxyIndexAdd = proxyIndexAdd + 1
+            proxyIndexAddAttempt = 0
+          else
+            TagBan("**No More Socks Can Be Used For Adding Bot, Please Check It ** @everyone ")
+          end
+        end
+      end
+    end
+  print("Please Turn Off Auto Add, Select All And Run The Sc Again")
+  return
+  end
+end
+
+
+
+if AutoAddBot then
+  if AutoAddBotType == "UBICON" then
+  for i = 1, #Email do
+      if not UseProxyToAdd then
+    Password = string.match(Email[i], ":(.+)")
+BotName =  string.match(Email[i], "([^:]+)")
+        addUbiBot(BotName, Password)
+        sleep(5000)
+        if getBot().status ~= 1 then
+          repeat
+            getBot():connect()
+            sleep(8000)
+          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+          if getBot().status == 3 or getBot().status == 4 then
+           removeBot(getBot().name)
+          end
+          if getBot().status == 1 then
+          end
+        end
+      else
+   Password = string.match(Email[i], ":(.+)")
+BotName =  string.match(Email[i], "([^:]+)")
+        addProxy(ProxyList[proxyIndexAdd])
+        addUbiBot(BotName, Password)
+        sleep(5000)
+        if getBot().status ~= 1 then
+          repeat
+            getBot():connect()
+            sleep(8000)
+          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+          if getBot().status == 3 or getBot().status == 4 then
+           removeBot(getBot().name)
+          end
+          if getBot().status == 1 then
+          end
+end
+        proxyIndexAddAttempt = proxyIndexAddAttempt + 1
+          if proxyIndexAddAttempt == MaxBotPerProxy then
+       if proxyIndexAdd <= #ProxyList then
+          proxyIndexAdd = proxyIndexAdd + 1
+          proxyIndexAddAttempt = 0
+       else
+       TagBan("**No More Socks Can Be Used For Adding Bot, Please Check It ** @everyone ")
+        end
+          end
+      end
+    end
+print("Please Turn Off Auto Add, Select All And Run The Sc Again")
+return
+  end
 end
 
 sleepwarp = 0
+sleepmulai = 0
 
 for i = 1,rulah do
 sleepwarp = sleepwarp + 9000
 end
 
-urutanproxybackup = rulah * MaxProxyPerBot
-
-for i = 1,MaxProxyPerBot do
-    table.insert(ProxyBackUp, proxy[urutanproxybackup])
-    urutanproxybackup = urutanproxybackup - 1
+for i = 1,rulah do
+sleepmulai = sleepmulai + 5000
 end
 
 
@@ -111,21 +305,63 @@ for i = 1, rulah do
     if WEBHOOK[i] and MESSAGEID[i] then
         WhStatus = WEBHOOK[i]
         MessageID = MESSAGEID[i]
-        rulah = rulah - 1
     else
         WhStatus = ""
         MessageID = ""
-        rulah = rulah - 1
     end
+end
+
+modebackup = ""
+
+for i = 1, rulah do
+    if BACKUPBOT[i] then
+local haspope = string.find(BACKUPBOT[i], "com")
+if haspope then
+modebackup = "UBICON"
+ BotBackUp = string.match(BACKUPBOT[i], "([^|]+)")
+ PwBotBackUp = string.match(BACKUPBOT[i], "|(.+)")
+else
+        if BACKUPBOT[i] == "" then
+modebackup = "NONE"
+            BotBackUp = ""
+            PwBotBackUp = ""
+        else
+            local hasPipe = string.find(BACKUPBOT[i], "|")
+            if hasPipe then
+ modebackup = "NORMAL"
+                BotBackUp = string.match(BACKUPBOT[i], "([^|]+)")
+                PwBotBackUp = string.match(BACKUPBOT[i], "|(.+)")
+            else
+modebackup = "GUEST"
+                BotBackUp = BACKUPBOT[i]
+                PwBotBackUp = ""
+            end
+        end
+    end
+end
+end
+
+
+for i = 1, rulah do
+if PROXYFORBACKUPBOT[i] then
+if PROXYFORBACKUPBOT[i] == "" then
+ProxyBackUp = ""
+else
+ProxyBackUp = PROXYFORBACKUPBOT[i]
+end
+end
 end
 
 
 
+
+
 seedid = 0
+seedidfloat = 0
 
 function detect2(itemid)
 local count = 0
-for i, tile in pairs(getBot():getWorld():getTiles()) do
+for _, tile in ipairs(getBot():getWorld():getTiles()) do
 if tile.fg == itemid then
 count = count + 1
 end
@@ -133,16 +369,80 @@ end
 return count
 end
 
+rootaman = {
+    8624, 8630, 8636, 8642, 8648, 8654, 8660, 8666, 8672, 8678,
+    8684, 8690, 8696, 8702, 8708, 8714, 
+}
+
+rootlist = {
+    8624, 8626, 8628, 8630, 8632, 8634, 8636, 8638, 8640, 8642, 
+    8644, 8646, 8648, 8650, 8652, 8654, 8656, 8658, 8660, 8662, 
+    8664, 8666, 8668, 8670, 8672, 8674, 8676, 8678, 8680, 8682, 
+    8684, 8686, 8688, 8690, 8692, 8694, 8696, 8698, 8700, 8702, 
+    8704, 8706, 8708, 8710, 8712, 8714, 8716, 2 , 8772
+}
+
+rootlist2 = {
+    8626, 8632, 8638, 8644, 8650, 8656, 8662, 8668, 8674, 8680,
+    8686, 8692, 8698, 8704, 8710, 8716, 
+}
+
+cutting = {
+    8740, 8742, 8744, 8746, 8748, 8750, 8752, 8754, 8756, 8758, 
+    8760, 8762, 8764, 8766, 8768, 8770
+}
+
+function cekseed2()
+for i, root in pairs(rootlist2) do
+if seedid == root then
+seedid = seedid - 3
+end
+end
+end
+
+function cekseed3()
+for i, root in pairs(rootlist) do
+if seedid == root then
+seedid = detectsoil()
+end
+end
+end
+
+function cekseed()
+for i, root in pairs(rootaman) do
+if seedid == root then
+seedid = seedid - 1
+end
+end
+end
+
+function cekseed4()
+for i, root in pairs(rootlist) do
+if seedid == root then
+seedid = 0
+end
+end
+end
+
 
 function detect()
-if SoilFarmMode then
-seedid = 8641
-return seedid
+        for y = 53, 1, -1 do
+            for x = 98, 2, -1 do
+                local tile = getBot():getWorld():getTile(x, y)
+                if tile.fg ~= 0 and detect2(tile.fg) > 60 then
+                    return tile.fg
+                end
+            end
+        end
+
+    return 0
 end
-    for y = 53, 1, -1 do
-        for x = 98, 2, -1 do
-            local tile = world:getTile(x, y)
-            if tile.fg ~= 0 and detect2(tile.fg) > 50 then
+
+function detectsoil()
+    for y = 0, 52 do
+        for x = 1, 99 do
+            local tile = getBot():getWorld():getTile(x, y)
+            if tile.fg ~= 0 and detect2(tile.fg) > 60 then
                 return tile.fg
             end
         end
@@ -150,6 +450,62 @@ end
 
     return 0
 end
+
+function cekterbang(id)
+local count = 0
+for _, obj in pairs(getBot():getWorld():getObjects()) do
+if obj.id == id then
+count = count + obj.count
+end
+end
+return count
+end
+
+idtable = {}
+
+function float1()
+    for _, obj in pairs(getBot():getWorld():getObjects()) do 
+        if obj.id ~= 112 and cekterbang(obj.id) > 50 then
+            table.insert(idtable, obj.id)
+        end
+    end
+end
+
+local idCount = {}
+function float2()
+for _, id in pairs(idtable) do
+    if idCount[id] then
+        idCount[id] = idCount[id] + 1
+    else
+        idCount[id] = 1
+    end
+end
+end
+
+function detectfloat()
+local mostFrequentID
+local maxCount = 0
+for id, count in pairs(idCount) do
+    if count > maxCount then
+        mostFrequentID = id
+        maxCount = count
+    end
+end
+if mostFrequentID then
+return mostFrequentID
+else
+return 0
+end
+end
+
+function cekfloat()
+for i, float in pairs(cutting) do
+if seedid == float then
+seedid = 0
+end
+end
+end
+
 
 
 
@@ -182,8 +538,9 @@ end
     return fossil 
 end
 
+item_list = {250,1716,82,78,94,662,754,146,356,72,46,124,1720,92,1122,212,84,1722,1844,2718,70,4966,288,232,788,148,96,3932,448,134,50,74,1504,494,266,852,132,2954,3934,3060,3056,1800,88,2960,1022,2578,3964,86,302,1332,304,1116,6788,10542,492,1690,316,1850,1718,1838,1032,1860,1026,3048,352,724,1590,798,488,1342,794,268,1502,8884,1858,594,3466,1314,1688,1312,3590,446,1856,1854,1516,1316,2700,4968,4964,6796,1862,310,290,296,6674,1864,4954,1476,896,1848,496,136,158,2958,2576,1954,152,1126,796,1524,2928,80,2934,150,1120,1142,1478,154,9356,452,258,2882,156,1140,3530,312,1124,890,1330,3052,294,1650,1652,348,1736,576,5016,1708,292,1146,1028,1762,600,11204}
+
 function metot1()
-local item_list = {250,1716,82,78,94,662,754,146,356,72,46,124,1720,92,1122,212,84,1722,1844,2718,70,4966,288,232,788,148,96,3932,448,98,134,50,74,1504,494,266,852,132,2954,3934,3060,3056,1800,88,2960,1022,2578,3964,86,302,1332,304,1116,6788,10542,492,1690,316,1850,1718,1838,1032,1860,1026,3048,352,724,1590,798,488,1342,794,268,1502,8884,1858,594,3466,1314,1688,1312,3590,446,1856,1854,1516,1316,2700,4968,4964,6796,1862,310,290,296,6674,1864,4954,1476,896,1848,496,136,158,2958,2576,1954,152,1126,796,1524,2928,80,2934,150,1120,1142,1478,154,9356,452,258,2882,156,1140,3530,312,1124,890,1330,3052,294,1650,1652,348,1736,576,5016,1708,292,1146,1028,1762,600,11204}
 
 for _, item_id in ipairs(item_list) do
     local item_count = inventory:getItemCount(item_id)  -- Menggunakan fungsi yang sesuai
@@ -196,7 +553,7 @@ end
 end
 
 function rmetot1()
-if not metotone then
+if not metotone and UseMethod then
 if getBot().gem_count > 500 then
 getBot():sendPacket(2,"action|buy\nitem|rare_clothes")
 sleep(4000)
@@ -240,7 +597,7 @@ end
 
 function cekemoji()
 if seedid == 4585 then
-return "<:paperseedbs:1063061801601871932>"
+return "<:pepper_tree:1081373865650954261>"
 elseif seedid == 5667 then
 return "<:lgrid_seed:1091612884758437959>"
 elseif seedid == 3005 then
@@ -248,7 +605,7 @@ return "<:fish_tank_seed:1012563310308233327>"
 elseif seedid == 8641 then
 return "<:Fence_seed:1121360619887661056>"
 else
-return  "<:paperseedbs:1063061801601871932>"
+return  "<:pepper_tree:1081373865650954261>"
 end
 end
 
@@ -356,7 +713,6 @@ local response = httpResult.body
   return lineCount
 end
 
-
 function cekbp()
 if not BpCek then
 if getBot():getInventory().slotcount < 36 then
@@ -371,7 +727,11 @@ end
 end
 end
 
+
 function botshow(Info)
+if WhStatus == "" then
+return
+end
 te = os.time() - t
  local verify = "<a:cham:849841924734976000> **Status Verify: "..nungguverify().."**"
 local activity = "**<:Pickaxe:1109395511661830176> Activity: "..Info.."**"
@@ -520,6 +880,19 @@ end
     end
 
 
+function trashclothes()
+        for a, trash in pairs(item_list) do
+            trash_count = inventory:getItemCount(trash)
+            if inventory:getItemCount(trash) > 0 then
+                getBot():sendPacket(2,"action|trash\n|itemID|"..trash) 
+                sleep(1500)
+                getBot():sendPacket(2,"action|dialog_return\ndialog_name|trash_item\nitemID|"..trash.."|\ncount|"..trash_count)
+                sleep(4000)
+            end
+        end
+    end
+
+
 
 local processedTimes = {} -- Tabel untuk menyimpan waktu yang telah diproses
 
@@ -621,82 +994,136 @@ sleep(1000)
 end
 end
 
-
-function addnyaproxy(rara)
-while true do
-if proxyIndex <= #proxy then
-if growidIndex <= #BotGrowid then
-local growidcuy = BotGrowid[growidIndex]
-local proxycuy = proxy[proxyIndex]
-addBot(growidcuy,PassBot,proxycuy)
-sleep(10000)
-if getBot().status ~= BotStatus.online then
+function BackUpBiasa()
+if ProxyBackUp == "" then
+addBot(BotBackUp,PwBotBackUp)
+sleep(5000)
+while getBot().status ~= 1 do
 getBot():connect()
 sleep(8000)
-end
-if getBot().status == BotStatus.online then
-warp(rumah,widreal)
-removeBot(rara)
-jalan()
+if getBot().status == 3 or getBot().status == 4 then
+removeBot(getBot().name)
 break
 end
-if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
-botshow(""..getBot().name.." Is "..status().."")
-removeBot(growidcuy)
-growidIndex = growidIndex  + 1
 end
-end
-end
-end
-end
-
-function addnyabiasa(rara)
-while true do
-if growidIndex <= #BotGrowid then
-local growidcuy = BotGrowid[growidIndex]
-local proxycuy = proxy[proxyIndex]
-addBot(growidcuy,PassBot)
-sleep(10000)
-if getBot().status ~= BotStatus.online then
-getBot():connect()
-sleep(8000)
-end
-if getBot().status == BotStatus.online then
-warp(rumah,widreal)
-removeBot(rara)
+if not awal then
+warp(rumah, widreal)
 jalan()
-break
 end
-if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
-botshow(""..getBot().name.." Is "..status().."")
-removeBot(growidcuy)
-growidIndex = growidIndex  + 1
-end
-end
-end
-end
-
-
-
-function cekbroya()
-if useproxy then
-addnyaproxy(getBot().name)
 else
-addnyabiasa(getBot().name)
+addProxy(ProxyBackUp)
+addBot(BotBackUp,PwBotBackUp)
+sleep(5000)
+while getBot().status ~= 1 do
+getBot():connect()
+sleep(8000)
+if getBot().status == 3 or getBot().status == 4 then
+removeBot(getBot().name)
+break
 end
 end
+if not awal then
+warp(rumah, widreal)
+jalan()
+end
+end
+end
+
+function BackUpGuest()
+if ProxyBackUp == "" then
+local mac, rid = string.match(BotBackUp, "([^|]+)|([^|]+)")
+addBot(generateName(), mac, rid)
+sleep(5000)
+while getBot().status ~= 1 do
+getBot():connect()
+sleep(8000)
+if getBot().status == 3 or getBot().status == 4 then
+removeBot(getBot().name)
+break
+end
+end
+if not awal then
+warp(rumah, widreal)
+jalan()
+end
+else
+addProxy(ProxyBackUp)
+local mac, rid = string.match(BotBackUp, "([^|]+)|([^|]+)")
+addBot(generateName(), mac, rid)
+sleep(5000)
+while getBot().status ~= 1 do
+getBot():connect()
+sleep(8000)
+if getBot().status == 3 or getBot().status == 4 then
+removeBot(getBot().name)
+break
+end
+end
+if not awal then
+warp(rumah, widreal)
+jalan()
+end
+end
+end
+
+function BackUpUbicon()
+if ProxyBackUp == "" then
+addUbiBot(generateName(),BotBackUp,PwBotBackUp)
+sleep(5000)
+while getBot().status ~= 1 do
+getBot():connect()
+sleep(8000)
+if getBot().status == 3 or getBot().status == 4 then
+removeBot(getBot().name)
+break
+end
+end
+if not awal then
+warp(rumah, widreal)
+jalan()
+end
+else 
+addProxy(ProxyBackUp)
+addUbiBot(generateName(),BotBackUp,PwBotBackUp)
+sleep(5000)
+while getBot().status ~= 1 do
+getBot():connect()
+sleep(8000)
+if getBot().status == 3 or getBot().status == 4 then
+removeBot(getBot().name)
+break
+end
+end
+if not awal then
+warp(rumah, widreal)
+jalan()
+end
+end
+end
+
 
 function banned()
-  if BackUpBot then
-  cekbroya()
-  jalan()
-  else
-  botshow("Bot Got Ban, No BackUpBot :)")
-  removeBot(getBot().name)
-  end
+if modebackup == "NORMAL" then
+removeBot(getBot().name)
+BackUpBiasa()
 end
+if modebackup == "GUEST" then
+removeBot(getBot().name)
+BackUpGuest()
+end
+if modebackup == "UBICON" then
+removeBot(getBot().name)
+BackUpUbicon()
+end
+if modebackup == "NONE" then
+if AutoRemoveBot then
+removeBot(getBot().name)
+end
+end
+  end
 
 function backpos(x,y)
+sleep(7000)
 werkd = rumah
     for _, tile in pairs(world:getTiles()) do
         if world:getTile(math.floor(world:getLocal().posx / 32),math.floor(world:getLocal().posy / 32)).fg == 6 then
@@ -723,18 +1150,6 @@ werkd = rumah
     end
 end
 
-function enetStatus()
-    if getBot():getEnetStatus() == Disconnected then
-        return string.upper("Offline")
-    elseif getBot():getEnetStatus() == Connected then
-        return string.upper("Online")
-    elseif getBot():getBotStatus() == ShadowBan then
-        return string.upper("Shadow Ban")
-    else
-        return string.upper("Unknown Status")
-    end
-end
-
 function reconnect(x,y)
 atas = getBot():getWorld().name
 if getBot().status == 1 and getBot():getWorld().name:upper() == "EXIT" then
@@ -744,17 +1159,25 @@ warp(rumah,widreal)
 backpos(x,y)
 jalan()
 end
+if getBot().status == 3 then 
+TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
+banned()
+end
+if getBot().status == 4 then
+TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
+banned()
+end
 if getBot().status ~= 1 then
 TagBan("**"..getBot().name:upper().." Was "..status().." Reconnecting... @everyone **")
 repeat
 getBot():connect()
 sleep(8000)
-until getBot().status == 1 or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
-if getBot().status == BotStatus.account_banned then 
+until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+if getBot().status == 3 then 
 TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
 end
-if getBot().status == BotStatus.location_banned then
+if getBot().status == 4 then
 TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
 end
@@ -770,8 +1193,9 @@ end
 
   function Take()
 botshow("Taking Seed For Planting Blank Seed")
-	warp(WorldSaveSeed[IndexSaveSeed], WorldSaveSeedID)
-	for _, object in pairs(getBot():getObjects()) do
+Kizuma = getRandom(WorldSaveSeed)
+	warp(Kizuma, WorldSaveSeedID)
+	for _, object in pairs(getBot():getWorld():getObjects()) do
 	  if object.id == seedid then
 		if inventory:getItemCount(seedid) == 200 then
 		  break
@@ -843,7 +1267,8 @@ end
 end
 
 function takenyaseed()
-warp(WorldSaveSeed[IndexSaveSeed],WorldSaveSeedID)
+Kizuma = getRandom(WorldSaveSeed)
+warp(Kizuma,WorldSaveSeedID)
 getBot().auto_collect = false
 while inventory:getItemCount(seedid) < 120 do
         for _,obj in pairs(getBot():getObjects()) do
@@ -868,14 +1293,40 @@ end
 warp(rumah,widreal)
 end
 
+function collectfloat()
+	for _, object in pairs(getBot():getWorld():getObjects()) do
+	  if object.id == seedidfloat then
+		findPath(math.floor(object.x /32), math.floor(object.y /32))
+		sleep(2000)
+                getBot().collect_interval = 10
+		getBot().auto_collect = true
+                getBot().ignore_gems = true
+                if inventory:getItemCount(seedidfloat) > 165 then
+          getBot().collect_interval = 4
+         getBot().auto_collect = true
+           getBot().ignore_gems = false
+           break
+             end
+	  end
+	end
+	end
+
 function harvest()
+if modefloat then
+collectfloat()
+end
 if SeparatePlant then
-atas = getBot():getWorld().name
 antiToxic()
 soilmode()
 coptrashs()
+if UseMethod then
+getBot().ignore_gems = true
+end
 getBot().auto_collect = true
 for i, tile in ipairs(world:getTiles()) do
+if getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 then
+warpfarm(rumah, wid)
+end
 if tile.fg == seedid and tile:canHarvest() and inventory:getItemCount(seedid-1) < 150 then
 if world:hasAccess(tile.x,tile.y) then
 getBot():findPath(tile.x,tile.y)
@@ -892,7 +1343,13 @@ antiToxic()
 soilmode()
 coptrashs()
 getBot().auto_collect = true
+if UseMethod then
+getBot().ignore_gems = true
+end
 for i, tile in ipairs(world:getTiles()) do
+if getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 then
+warpfarm(rumah, wid)
+end
 if tile.fg == seedid and tile:canHarvest() and inventory:getItemCount(seedid-1) < 150 then
 if world:hasAccess(tile.x,tile.y) then
 if inventory:getItemCount(seedid) == 0 then
@@ -914,41 +1371,6 @@ end
 end
 end
 
-function takegems()
-y = 0
-if foregraund(seedid) == 0 then
-if TakeGemsWithGrowid then
-addBot(GrowidTakeGems,PasswordGrowid)
-      sleep(10000)
-warptakegems(rumah,wid:upper())
-      getBot(GrowidTakeGems).auto_collect = true
-      getBot(GrowidTakeGems):findPath(0,y)
-sleep(500)
-for _,rah in pairs(getBot(GrowidTakeGems):getWorld():getObjects()) do
-        if rah.id == 112 then
-          while rah.count > 0 do
-            for i =1,33 do
-              getBot(GrowidTakeGems):moveRight()
-              sleep(300)
-              getBot(GrowidTakeGems):moveRight()
-              sleep(300)
-              getBot(GrowidTakeGems):moveRight()
-              sleep(300)
-            end
-            y = y + 2
-            getBot(GrowidTakeGems):findPath(0,y)
-          end
-          if rah.count == 0 then
-            removeBot(GrowidTakeGems)
-            sleep(10000)
-            botshow("Done Taking Soil Gems")
-                end
-              end
-            end
-          end
-        end
-      end
-
 function plant()
 if not SeparatePlant then
 return
@@ -956,13 +1378,25 @@ end
 if DontPlant then
 return
 end
-cekbp()
 coptrashs()
+if not IgnoreGems and UseMethod then
+getBot().ignore_gems = false
+end
 for i, tile in ipairs(world:getTiles()) do
+if getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 then
+warpfarm(rumah, wid)
+end
 if 0 == world:getTile(tile.x, tile.y).fg and 0 ~= world:getTile(tile.x, tile.y + 1).fg and world:getTile(tile.x, tile.y + 1).fg ~= seedid and inventory:getItemCount(seedid) > 0 then
 if world:hasAccess(tile.x, tile.y) then
 getBot():findPath(tile.x, tile.y)
 sleep(20)
+if SoilFarmMode then
+     while world:getTile(tile.x, tile.y+1).fg == (seedid + 3) and world:getTile(tile.x, tile.y+1).flags ~= 0 do
+     getBot():hit(tile.x,tile.y+1)
+     sleep(delayharvest)
+              reconnect(tile.x, tile.y - 1)
+            end
+end
 if world:getTile(math.floor(world:getLocal().posx / 32), math.floor(world:getLocal().posy / 32)).fg == 0 then
 reconnect(tile.x,tile.y)
 getBot():place(tile.x,tile.y,seedid)
@@ -979,14 +1413,7 @@ end
 end
 end
 end
-
-function warptakegems(world,id)
-getBot(GrowidTakeGems):sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
-sleep(4000)
-getBot(GrowidTakeGems):sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
-sleep(4000)
 end
-
 
  sayAn= {
         "Finally",
@@ -1005,61 +1432,22 @@ end
     local acakIndex = math.random(1, #sayAn)
     local totalsay = sayAn[acakIndex]
 
-
 function warpdoang(world,id)
-getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
-sleep(6000)
-getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
-sleep(6000)
-getBot():say(totalsay)
-end
-
-nuked = false 
-function warp(worldra,id)
-    cok = 0
-while getBot():getWorld().name:upper() ~= worldra:upper() and not nuked do
-        while getBot().status ~= 1 do
-            getBot():connect()
+while getBot():getWorld().name:upper() ~= world:upper() do
+            getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
             sleep(5000)
-        end
-        getBot():sendPacket(3,"action|join_request\nname|"..worldra:upper().."\ninvitedWorld|0")
-        sleep(5000)
-        if cok == 10 then
-            nuked = true
-        else
-            cok = cok + 1
-        end
-    end
-    if id ~= "" and not nuked then
-        while world:getTile(math.floor(world:getLocal().posx / 32), math.floor(world:getLocal().posy / 32)).fg == 6 and not nuked do
-            while getBot().status ~= 1 do
-                getBot():connect()
-                sleep(5500)
-            end
-            getBot():sendPacket(3,"action|join_request\nname|"..worldra:upper().."|"..id:upper().."\ninvitedWorld|0")
-            sleep(1000)
-        end
-    else
-        while world:getTile(math.floor(world:getLocal().posx / 32), math.floor(world:getLocal().posy / 32)).fg == 6 and not nuked do
-            while getBot().status ~= 1 do
-                getBot():connect()
-                sleep(5500)
-            end
-            getBot():sendPacket(3,"action|join_request\nname|"..worldra:upper().."|"..id:upper().."\ninvitedWorld|0")
-            sleep(1000)
-    end
 end
-getBot():say(totalsay)
 end
 
-function warpfarm(worldra,id)
+
+function warp(world,id)
     cok = 0
-while getBot():getWorld().name:upper() ~= worldra:upper() and not nuked do
+while getBot():getWorld().name:upper() ~= world:upper() and not nuked do
         while getBot().status ~= 1 do
             getBot():connect()
-            sleep(8000)
+            sleep(15000)
         end
-        getBot():sendPacket(3,"action|join_request\nname|"..worldra:upper().."\ninvitedWorld|0")
+        getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."\ninvitedWorld|0")
         sleep(8000)
         if cok == 10 then
             nuked = true
@@ -1068,26 +1456,96 @@ while getBot():getWorld().name:upper() ~= worldra:upper() and not nuked do
         end
     end
     if id ~= "" and not nuked then
-  while world:getTile(math.floor(world:getLocal().posx / 32),math.floor(world:getLocal().posy / 32)).fg == 6 and not nuked do
-   for i=1, #wid do
-widreal = wid[i]
-           while getBot().status ~= 1 do
-            getBot():connect()
-            sleep(8000)
+        while getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 and not nuked do
+            while getBot().status ~= 1 do
+                getBot():connect()
+                sleep(15000)
             end
-            getBot():sendPacket(3,"action|join_request\nname|"..worldra:upper().."|"..wid[i].."\ninvitedWorld|0")
+            getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
             sleep(5000)
-if world:getTile(math.floor(world:getLocal().posx / 32),math.floor(world:getLocal().posy / 32)).fg ~= 6 then
-break
-end
         end
-if world:getTile(math.floor(world:getLocal().posx / 32),math.floor(world:getLocal().posy / 32)).fg ~= 6 then
-break
+    else
+     while getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 and not nuked do
+            while getBot().status ~= 1 do
+                getBot():connect()
+                sleep(15000)
+            end
+   getBot():sendPacket(3,"action|join_request\nname|"..world:upper().."|"..id:upper().."\ninvitedWorld|0")
+            sleep(5000)
+    end
 end
-end
-end
+if UseMethod and not nuked then
 getBot():say(totalsay)
-sleep(100)
+sleep(1000)
+end
+end
+
+nuked = false
+
+function warpfarm(kota,id)
+   if getBot():getWorld().name:upper() ~= kota:upper() and not nuked then
+      coynuked = 0
+      while getBot():getWorld().name:upper() ~= kota:upper() and not nuked do
+         sleep(1000)
+         getBot():sendPacket(3,"action|join_request\nname|"..kota:upper().."\ninvitedWorld|0")
+         sleep(8000)
+         coynuked = coynuked + 1
+         if getBot().status ~= 1 then
+            getBot().auto_reconnect = true
+            while true do
+               sleep(10000)
+               if getBot().status == 3 or getBot().status == 4 then
+                  sleep(100)
+                  sleep(1000)
+                  TagBan("**"..getBot().name:upper().." Was Banned When Warp** @everyone")
+                  removeBot(getBot().name)
+               end
+               if getBot().status == 1 then
+                  getBot().auto_reconnect = false
+                  break
+               end
+            end
+         end
+         if coynuked == 7 then
+            sleep(1000)
+            nuked = true
+         end
+      end
+   end
+   
+   if getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 and not nuked then
+      while getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 and not nuked do
+         for i = 1,#wid do
+         sleep(1000) 
+         widreal = wid[i]
+         getBot():sendPacket(3,"action|join_request\nname|"..kota:upper().."|"..wid[i].."\ninvitedWorld|0")
+         sleep(8000)
+   if getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg ~= 6 then
+         break
+   end 
+         if getBot().status == 1 then
+            getBot().auto_reconnect = true
+            while true do
+               sleep(10000)
+               if getBot().status == 3 or getBot().status == 4 then
+                  sleep(100)
+                  sleep(1000)
+                  TagBan("**"..getBot().name:upper().." Was Banned When Warp ** @everyone ")
+                  removeBot(getBot().name)
+               end
+               if getBot().status == 1 then
+                  getBot().auto_reconnect = false
+                  break
+               end
+            end
+         end
+      end
+   end
+end
+if UseMethod and not nuked then
+getBot():say(totalsay)
+sleep(1000)
+end
 end
 
 function restoretime()
@@ -1108,8 +1566,8 @@ end
 function takepick()
 if TakePick then
 if inventory:getItemCount(98) == 0 then
-getBot().auto_collect = false
-botshow("Taking Pick")
+sleep(sleepwarp)
+botshow("Bot Taking Pick")
     warp(WorldPick,WorldPickID)
     sleep(100)
     while inventory:getItemCount(98) == 0 do
@@ -1126,8 +1584,13 @@ botshow("Taking Pick")
             end
         end
     end
+    getBot().auto_collect = false
     getBot():moveLeft()
-    sleep(100)
+    sleep(800)
+    getBot():moveUp()
+    sleep(1000)
+    getBot():moveDown()
+    sleep(1000)
     while inventory:getItemCount(98) > 1 do
     getBot():sendPacket(2,"action|drop\n|itemID|98")
     sleep(1000)
@@ -1140,22 +1603,23 @@ end
 end
 end
 
+
 function joinworld()
 botshow("World Finish, Joining World...")
     sleep(100)
-    for _,bimba in pairs(WorldForJoin) do
-      kasep = math.random(1, #WorldForJoin)
+    for _,bimba in pairs(WorldForJoin) do 
+    kasep = math.random(1, #WorldForJoin)
         warpdoang(WorldForJoin[kasep],"")
         sleep(4000)
     end
 end
 
 function autoban()
- for _, peler in pairs(world:getPlayers()) do
+ for _, peler in pairs(getBot():getWorld():getPlayers()) do
         for _, own in pairs(WhiteList) do
-            if peler.name:upper() == own:upper() and peler.name:upper() ~= getBot().name:upper() then
+            if peler.name:upper() ~= own:upper() and peler.name:upper() ~= getBot().name:upper() then
                 getBot():say("/ban "..peler.name)
-                sleep(3000) 
+                sleep(7000) 
                end
             end
         end
@@ -1163,13 +1627,15 @@ function autoban()
 
 function autoleave()
 if AutoLeave then
-for _, peler in pairs(world:getPlayers()) do
+local player = 0
+for _, peler in pairs(getBot():getWorld():getPlayers()) do
 for _, own in pairs(WhiteList) do
-       if peler.name:upper() == own:upper() and peler.name:upper() ~= getBot().name:upper() then
-if peler > MaxPeople then
-getBot():sendPacket(3,"action|join_request\nname|" .. EXIT .. "\ninvitedWorld|0")
-sleep(DelayLeave)
-warp(rumah,wid)
+if peler.name:upper() ~= own:upper() and peler.name:upper() ~= getBot().name:upper() then
+player = player + 1
+if player > MaxPeople then
+getBot():warp("EXIT")
+sleep(DelayLeave * 1000 * 60)
+warp(rumah,widreal)
 jalan()
 end
 end
@@ -1331,7 +1797,20 @@ end
 end
 end
 
+function foregraund2()
+local count = 0
+for _, obj in pairs(getBot():getWorld():getObjects()) do
+if obj.id == seedidfloat then
+count = count + obj.count
+end
+end
+return count
+end
+
 function foregraund(itemid)
+if modefloat then
+return foregraund2()
+end
       local count = 0
       for _, tile in ipairs(getBot():getWorld():getTiles()) do
         if tile.fg == itemid and tile:canHarvest() then
@@ -1461,6 +1940,7 @@ function round(n)
     return n % 1 > 0.5 and math.ceil(n) or math.floor(n)
 end
 
+
 function CekTilePack(x,y,num)
     local count = 0
     local stack = 0
@@ -1471,6 +1951,21 @@ function CekTilePack(x,y,num)
         end
     end
     if stack < 20 and count <= (4000 - num) then
+        return true
+    end
+    return false
+end
+
+function CekTileSeeds(x,y,num)
+    local count = 0
+    local stack = 0
+    for _,obj in pairs(world:getObjects()) do
+        if round(obj.x / 32) == x and math.floor(obj.y / 32) == y then
+            count = count + obj.count
+            stack = stack + 1
+        end
+    end
+    if count <= (3800 - num) then
         return true
     end
     return false
@@ -1503,6 +1998,7 @@ atas = getBot():getWorld().name
     end
 end
 
+
 function sampah()
 if next(CustomItem) ~= nil then
 getBot():moveUp()
@@ -1530,26 +2026,13 @@ local kiwar = 0
 return kiwar
 end
 
-function CekTileSeeds(x,y,num)
-    local count = 0
-    local stack = 0
-    for _,obj in pairs(world:getObjects()) do
-        if round(obj.x / 32) == x and math.floor(obj.y / 32) == y then
-            count = count + obj.count
-            stack = stack + 1
-        end
-    end
-    if count <= (3800 - num) then
-        return true
-    end
-    return false
-end
-
 function saveseed()
-getBot().auto_collect = false
+Kizuma = getRandom(WorldSaveSeed)
+getBot():autoCollect(4,false)
 botpack("Saving Seeds")
 atas = getBot():getWorld().name
-        warp(WorldSaveSeed[IndexSaveSeed],WorldSaveSeedID)
+        warp(Kizuma,WorldSaveSeedID)
+rara = SeedsScanner(seedid)
     for _, tile in pairs(world:getTiles()) do
         if tile.fg == IDPatokanSeed or tile.bg == IDPatokanSeed then 
            if CekTileSeeds(tile.x,tile.y,inventory:getItemCount(seedid)) then
@@ -1573,21 +2056,20 @@ atas = getBot():getWorld().name
     end
     sampah()
     seeddrop = SeedsScanner(seedid)
-    hasilseed = 200
+    hasilseed = math.abs(rara - seeddrop)
     botpack("Success Saving Seeds") 
     hasilseed = 0
-IndexSaveSeed = randomSeed
     warp(rumah, widreal)
 end
 
 
 
 function belicuy()
+Kizuma = getRandom(WorldSavePack)
   woloy = getBot():getWorld().name
-    sleep(1800)
-    getBot().auto_collect = false
+    getBot():autoCollect(4,false)
     botpack("Buying Pack..")
-    warp(WorldSavePack[IndexSavePack],WorldSavePackID)
+    warp(Kizuma,WorldSavePackID)
 rara = SeedsScanner(packitemid[1])
     while getBot().gem_count > packgems do
             getBot():sendPacket(2,"action|buy\nitem|".. itemname)
@@ -1606,7 +2088,7 @@ rara = SeedsScanner(packitemid[1])
      hasilpack = math.abs(rara - totalpack)
         botpack("Done Droping Pack, Back To Farm...")
   hasilpack = 0
-IndexSavePack = randomPack
+sampah()
     warp(woloy,widreal)
 end
 
@@ -1617,14 +2099,15 @@ end
 end
 
 function rotisan()
-if inventory:getItemCount(seedid) == 200 then
+if inventory:getItemCount(seedid) > 150 then
 saveseed()
 end
 end
 
+
 function cukcuk1(world)
 if foregraund(seedid) == 0 then
-gemsakhir = getBot().gem_count
+gemsakhir = getBot():getLocal().gems
 gemssmua = gemsakhir + gemssave
 local perbedaan = math.abs(gemsawal - gemssmua)
 anjay()
@@ -1685,47 +2168,86 @@ function clearTable(tbl)
 end
 
 function startwoi()
-while true do
+if getBot().status == 3 or getBot().status == 4 then
+awal = true
+removeBot(getBot().name)
+banned()
+awal = false
+end
+while string.find(getBot():getWorld().name:upper(), "TUTORIAL") do
+sleep(5000)
+end
 if getBot().status == 1 then
+while true do
 for index,world in pairs(worlds) do
 emoji = cekemoji()
 rumah = world
 DataWorld()
-getBot():warp("EXIT")
-if Guest then
-sleep(20000)
-end
-sleep(5000)
+sleep(sleepmulai)
 takepick()
+takehose()
+getBot():warp("EXIT")
+sleep(9000)
 warpfarm(world,wid)
 if not nuked then
 clearTable(processedTimes)
 seedid = detect()
+cekseed()
+cekseed2()
+cekseed3()
+cekseed4()
+if seedid == 0 then
+modefloat = true
+float1()
+float2()
+seedidfloat = detectfloat()
+seedid  = detectfloat() + 1
+end
 botshow("Bot Start")
-getBot().collect_range = 4
+trashclothes()
 antiToxic()
+gemsawal = getBot():getLocal().gems
 tt = os.time()
-gemsawal = getBot().gem_count
+::VELISHA::
+if foregraund(seedid) > 0 then
 jalan()
 tambal()
-      takegems()
+end
+if not modefloat then
+modefloat = true
+float1()
+float2()
+seedidfloat = detectfloat()
+seedid  = detectfloat() 
+cekfloat()
+seedid = seedid + 1
+if seedid ~= 1 then
+  goto VELISHA
+end
+end
       tt = os.time() - tt
       Time[world] = math.floor(tt / 3600) .. " Hours " .. math.floor(tt % 3600 / 60) .. " Minutes"
       sleep(100)
-      if start < #WorldList then
+      if start < #worlds then
        start = start + 1
+      modefloat = false
       else
-      loopnya = loopnya + 1
+    if loop then
+      totalloop = totalloop + 1
      waktu = {}
      berlian = {}
      pohon = {}
+     modefloat = false
       end
+end
       if JoinWorldAfterFinish then
         joinworld()
+      modefloat = false
       end
 else
 Time[world] = "NUKED"
 botshow("World Is Nuked, Going To Next World..")
+TagBan("**"..world:upper().." WAS NUKED** @everyone")
 nuked = false
 sleep(5000)
    end
