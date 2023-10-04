@@ -31,8 +31,6 @@ widreal = ""
 metotone = false
 modefloat = false
 awal = false
-world = getBot():getWorld() 
-inventory = getBot():getInventory()
 
 startslotbot = 1
 
@@ -108,7 +106,7 @@ function generateName()
 
     local randomText = ""
 
-    for _ = 1, LengthName do
+    for _ = 1, 9 do
         local randomIndex = math.random(1, #charset)
         local randomChar = charset:sub(randomIndex, randomIndex)
         randomText = randomText .. randomChar
@@ -121,40 +119,40 @@ if AutoAddBot then
   if AutoAddBotType == "LOGINGUEST" then
     for i = 1, #ListBotAdd do
       if not UseProxyToAdd then
-        local mac, rid = string.match(GuestList[i], "([^|]+)|([^|]+)")
+        local mac, rid = string.match(ListBotAdd[i], "([^|]+)|([^|]+)")
         addBot(generateName(), mac, rid)
         sleep(5000)
         
-        if getBot().status ~= 1 then
+        if getBot().status ~= BotStatus.online then
           repeat
             getBot():connect()
             sleep(8000)
-          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+          until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
           
-          if getBot().status == 3 or getBot().status == 4 then
+          if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
             removeBot(getBot().name)
           end
           
-          if getBot().status == 1 then
+          if getBot().status == BotStatus.online then
           end
         end
       else
-        local mac, rid = string.match(GuestList[i], "([^|]+)|([^|]+)")
+        local mac, rid = string.match(ListBotAdd[i], "([^|]+)|([^|]+)")
         addProxy(ProxyList[proxyIndexAdd])
         addBot(generateName(), mac, rid)
         sleep(5000)
         
-        if getBot().status ~= 1 then
+        if getBot().status ~= BotStatus.online then
           repeat
             getBot():connect()
             sleep(8000)
-          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
+          until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
           
-          if getBot().status == 3 or getBot().status == 4 then
+          if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
             removeBot(getBot().name)
           end
           
-          if getBot().status == 1 then
+          if getBot().status == BotStatus.online then
           end
      end
             
@@ -183,15 +181,15 @@ if AutoAddBot then
         BotName =  string.match(ListBotAdd[i], "([^:]+)")
         addBot(BotName, PwBot)
         sleep(5000)
-        if getBot().status ~= 1 then
+        if getBot().status ~= BotStatus.online then
           repeat
             getBot():connect()
             sleep(8000)
-          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
-          if getBot().status == 3 or getBot().status == 4 then
+          until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
+          if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
           removeBot(getBot().name)
           end
-          if getBot().status == 1 then
+          if getBot().status == BotStatus.online then
           end
         end
       else
@@ -200,15 +198,15 @@ if AutoAddBot then
         addProxy(ProxyList[proxyIndexAdd])
         addBot(BotName, PwBot)
         sleep(5000)
-        if getBot().status ~= 1 then
+        if getBot().status ~= BotStatus.online then
           repeat
             getBot():connect()
             sleep(8000)
-          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
-          if getBot().status == 3 or getBot().status == 4 then
+          until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
+          if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
           removeBot(getBot().name)
           end
-          if getBot().status == 1 then
+          if getBot().status == BotStatus.online then
           end
         end
         proxyIndexAddAttempt = proxyIndexAddAttempt + 1
@@ -237,15 +235,15 @@ if AutoAddBot then
 BotName =  string.match(Email[i], "([^:]+)")
         addUbiBot(BotName, Password)
         sleep(5000)
-        if getBot().status ~= 1 then
+        if getBot().status ~= BotStatus.online then
           repeat
             getBot():connect()
             sleep(8000)
-          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
-          if getBot().status == 3 or getBot().status == 4 then
+          until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
+          if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
            removeBot(getBot().name)
           end
-          if getBot().status == 1 then
+          if getBot().status == BotStatus.online then
           end
         end
       else
@@ -254,15 +252,15 @@ BotName =  string.match(Email[i], "([^:]+)")
         addProxy(ProxyList[proxyIndexAdd])
         addUbiBot(BotName, Password)
         sleep(5000)
-        if getBot().status ~= 1 then
+        if getBot().status ~= BotStatus.online then
           repeat
             getBot():connect()
             sleep(8000)
-          until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
-          if getBot().status == 3 or getBot().status == 4 then
+          until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
+          if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
            removeBot(getBot().name)
           end
-          if getBot().status == 1 then
+          if getBot().status == BotStatus.online then
           end
 end
         proxyIndexAddAttempt = proxyIndexAddAttempt + 1
@@ -280,6 +278,9 @@ print("Please Turn Off Auto Add, Select All And Run The Sc Again")
 return
   end
 end
+
+world = getBot():getWorld() 
+inventory = getBot():getInventory()
 
 sleepwarp = 0
 sleepmulai = 0
@@ -921,14 +922,14 @@ function botRest()
             sleep(SleepRest * 60 * 1000)
             getBot():connect()
             botshow("Bot Done Rest, Starting Back...")
-            if getBot().status ~= 1 then
+            if getBot().status ~= BotStatus.online then
             getBot().auto_reconnect = true
                 repeat
                     getBot():connect()
                     sleep(10000)
-                until getBot().status == 1
+                until getBot().status == BotStatus.online
             end
-            if getBot().status == 1 then
+            if getBot().status == BotStatus.online then
                 table.insert(processedTimes, curah) -- Menyimpan waktu yang telah diproses
                 warp(rumah, widreal)
                 jalan()
@@ -1007,14 +1008,15 @@ sleep(1000)
 end
 end
 
+
 function BackUpBiasa()
 if ProxyBackUp == "" then
-addBot(BotBackUp,PwBotBackUp)
+getBot():updateBot(BotBackUp,PwBotBackUp)
 sleep(5000)
-while getBot().status ~= 1 do
+while getBot().status ~= BotStatus.online do
 getBot():connect()
 sleep(8000)
-if getBot().status == 3 or getBot().status == 4 then
+if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
 removeBot(getBot().name)
 break
 end
@@ -1027,10 +1029,10 @@ else
 addProxy(ProxyBackUp)
 addBot(BotBackUp,PwBotBackUp)
 sleep(5000)
-while getBot().status ~= 1 do
+while getBot().status ~= BotStatus.online do
 getBot():connect()
 sleep(8000)
-if getBot().status == 3 or getBot().status == 4 then
+if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
 removeBot(getBot().name)
 break
 end
@@ -1045,12 +1047,12 @@ end
 function BackUpGuest()
 if ProxyBackUp == "" then
 local mac, rid = string.match(BotBackUp, "([^|]+)|([^|]+)")
-addBot(generateName(), mac, rid)
+getBot():updateBot(generateName(), mac, rid)
 sleep(5000)
-while getBot().status ~= 1 do
+while getBot().status ~= BotStatus.online do
 getBot():connect()
 sleep(8000)
-if getBot().status == 3 or getBot().status == 4 then
+if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
 removeBot(getBot().name)
 break
 end
@@ -1062,12 +1064,12 @@ end
 else
 addProxy(ProxyBackUp)
 local mac, rid = string.match(BotBackUp, "([^|]+)|([^|]+)")
-addBot(generateName(), mac, rid)
+getBot():updateBot(generateName(), mac, rid)
 sleep(5000)
-while getBot().status ~= 1 do
+while getBot().status ~= BotStatus.online do
 getBot():connect()
 sleep(8000)
-if getBot().status == 3 or getBot().status == 4 then
+if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
 removeBot(getBot().name)
 break
 end
@@ -1083,10 +1085,10 @@ function BackUpUbicon()
 if ProxyBackUp == "" then
 addUbiBot(generateName(),BotBackUp,PwBotBackUp)
 sleep(5000)
-while getBot().status ~= 1 do
+while getBot().status ~= BotStatus.online do
 getBot():connect()
 sleep(8000)
-if getBot().status == 3 or getBot().status == 4 then
+if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
 removeBot(getBot().name)
 break
 end
@@ -1099,10 +1101,10 @@ else
 addProxy(ProxyBackUp)
 addUbiBot(generateName(),BotBackUp,PwBotBackUp)
 sleep(5000)
-while getBot().status ~= 1 do
+while getBot().status ~= BotStatus.online do
 getBot():connect()
 sleep(8000)
-if getBot().status == 3 or getBot().status == 4 then
+if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
 removeBot(getBot().name)
 break
 end
@@ -1117,7 +1119,6 @@ end
 
 function banned()
 if modebackup == "NORMAL" then
-removeBot(getBot().name)
 BackUpBiasa()
 end
 if modebackup == "GUEST" then
@@ -1165,36 +1166,36 @@ end
 
 function reconnect(x,y)
 atas = getBot():getWorld().name
-if getBot().status == 1 and getBot():getWorld().name:upper() == "EXIT" then
+if getBot().status == BotStatus.online and getBot():getWorld().name:upper() == "EXIT" then
 TagBan("**"..getBot().name:upper().." In EXIT, Now Back To Farm In "..rumah.." @everyone **")
 sleep(5000)
 warp(rumah,widreal)
 backpos(x,y)
 jalan()
 end
-if getBot().status == 3 then 
+if getBot().status == BotStatus.account_banned then 
 TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
 end
-if getBot().status == 4 then
+if getBot().status == BotStatus.location_banned then
 TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
 end
-if getBot().status ~= 1 then
+if getBot().status ~= BotStatus.online then
 TagBan("**"..getBot().name:upper().." Was "..status().." Reconnecting... @everyone **")
 repeat
 getBot():connect()
 sleep(8000)
-until getBot().status == 1 or getBot().status == 3 or getBot().status == 4
-if getBot().status == 3 then 
+until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
+if getBot().status == BotStatus.account_banned then 
 TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
 end
-if getBot().status == 4 then
+if getBot().status == BotStatus.location_banned then
 TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
 end
-if getBot().status == 1 then
+if getBot().status == BotStatus.online then
 TagBan("**"..getBot().name:upper().." Was "..status().." Now Back To Farm.. @everyone **")
 sleep(5000)
 warp(rumah,widreal)
@@ -1266,13 +1267,13 @@ local playerNumber = tonumber(playerData:match("%d+"))
     getBot():disconnect()
     botshow("Bot Off, Ban Wave!, Rest For "..SleepBotOff.." Minutes")
     sleep(SleepBotOff * 60 * 1000)
-    if getBot().status ~= 1 then
-    while getBot().status ~= 1 do
+    if getBot().status ~= BotStatus.online then
+    while getBot().status ~= BotStatus.online do
     getBot():connect()
     sleep(7000)
     end
     end
-    if getBot().status == 1 then
+    if getBot().status == BotStatus.online then
     warp(waras,widreal)
     jalan()
   end
@@ -1336,10 +1337,10 @@ if UseMethod then
 getBot().ignore_gems = true
 end
 getBot().auto_collect = true
-for i, tile in ipairs(world:getTiles()) do
 if getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 then
 warpfarm(rumah, wid)
 end
+for i, tile in ipairs(world:getTiles()) do
 if tile.fg == seedid and tile:canHarvest() and inventory:getItemCount(seedid-1) < 150 then
 if world:hasAccess(tile.x,tile.y) then
 getBot():findPath(tile.x,tile.y)
@@ -1359,10 +1360,10 @@ getBot().auto_collect = true
 if UseMethod then
 getBot().ignore_gems = true
 end
-for i, tile in ipairs(world:getTiles()) do
 if getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 then
 warpfarm(rumah, wid)
 end
+for i, tile in ipairs(world:getTiles()) do
 if tile.fg == seedid and tile:canHarvest() and inventory:getItemCount(seedid-1) < 150 then
 if world:hasAccess(tile.x,tile.y) then
 if inventory:getItemCount(seedid) == 0 then
@@ -1426,7 +1427,6 @@ end
 end
 end
 end
-end
 
  sayAn= {
         "Finally",
@@ -1456,7 +1456,7 @@ end
 function warp(world,id)
     cok = 0
 while getBot():getWorld().name:upper() ~= world:upper() and not nuked do
-        while getBot().status ~= 1 do
+        while getBot().status ~= BotStatus.online do
             getBot():connect()
             sleep(15000)
         end
@@ -1470,7 +1470,7 @@ while getBot():getWorld().name:upper() ~= world:upper() and not nuked do
     end
     if id ~= "" and not nuked then
         while getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 and not nuked do
-            while getBot().status ~= 1 do
+            while getBot().status ~= BotStatus.online do
                 getBot():connect()
                 sleep(15000)
             end
@@ -1479,7 +1479,7 @@ while getBot():getWorld().name:upper() ~= world:upper() and not nuked do
         end
     else
      while getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg == 6 and not nuked do
-            while getBot().status ~= 1 do
+            while getBot().status ~= BotStatus.online do
                 getBot():connect()
                 sleep(15000)
             end
@@ -1503,17 +1503,17 @@ function warpfarm(kota,id)
          getBot():sendPacket(3,"action|join_request\nname|"..kota:upper().."\ninvitedWorld|0")
          sleep(8000)
          coynuked = coynuked + 1
-         if getBot().status ~= 1 then
+         if getBot().status ~= BotStatus.online then
             getBot().auto_reconnect = true
             while true do
                sleep(10000)
-               if getBot().status == 3 or getBot().status == 4 then
+               if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
                   sleep(100)
                   sleep(1000)
                   TagBan("**"..getBot().name:upper().." Was Banned When Warp** @everyone")
                   removeBot(getBot().name)
                end
-               if getBot().status == 1 then
+               if getBot().status == BotStatus.online then
                   getBot().auto_reconnect = false
                   break
                end
@@ -1536,17 +1536,17 @@ function warpfarm(kota,id)
    if getBot():getWorld():getTile(math.floor(getBot():getWorld():getLocal().posx / 32),math.floor(getBot():getWorld():getLocal().posy / 32)).fg ~= 6 then
          break
    end 
-         if getBot().status == 1 then
+         if getBot().status == BotStatus.online then
             getBot().auto_reconnect = true
             while true do
                sleep(10000)
-               if getBot().status == 3 or getBot().status == 4 then
+               if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
                   sleep(100)
                   sleep(1000)
                   TagBan("**"..getBot().name:upper().." Was Banned When Warp ** @everyone ")
                   removeBot(getBot().name)
                end
-               if getBot().status == 1 then
+               if getBot().status == BotStatus.online then
                   getBot().auto_reconnect = false
                   break
                end
@@ -1843,18 +1843,18 @@ werkd = worldnya
             getBot():sendPacket(3,"action|join_request\nname|".. werkd .. "|" .. wid:upper().."\ninvitedWorld|0")
             sleep(4000)
             until world:getTile(math.floor(world:getLocal().posx / 32),math.floor(world:getLocal().posy / 32)).fg ~= 6
-            if x and y and getBot().status == 1 and getBot():getWorld().name:upper() == werkd:upper() then
+            if x and y and getBot().status == BotStatus.online and getBot():getWorld().name:upper() == werkd:upper() then
                 repeat
                     getBot():findPath(x,y)
                     sleep(100)
                 until math.floor(world:getLocal().posx / 32) == x or math.floor(world:getLocal().posy / 32) == y
             end
-            if getBot().status == 1 and getBot():getWorld().name:upper() == werkd:upper() then
+            if getBot().status == BotStatus.online and getBot():getWorld().name:upper() == werkd:upper() then
                 if x and y then
-                    if getBot().status == 1 and math.floor(world:getLocal().posx / 32) == x and math.floor(world:getLocal().posy / 32) == y then
+                    if getBot().status == BotStatus.online and math.floor(world:getLocal().posx / 32) == x and math.floor(world:getLocal().posy / 32) == y then
                         break
                     end
-                elseif getBot().status == 1 then
+                elseif getBot().status == BotStatus.online then
                     break
                 end
             end
@@ -1870,18 +1870,18 @@ werkd = worldnya
             getBot():sendPacket(3,"action|join_request\nname|".. werkd .. "|" .. wid:upper().."\ninvitedWorld|0")
             sleep(4000)
             until world:getTile(math.floor(world:getLocal().posx / 32),math.floor(world:getLocal().posy / 32)).fg ~= 6
-            if x and y and getBot().status == 1 and getBot():getWorld().name:upper() == werkd:upper() then
+            if x and y and getBot().status == BotStatus.online and getBot():getWorld().name:upper() == werkd:upper() then
                 repeat
                     getBot():findPath(x,y)
                     sleep(100)
                 until math.floor(world:getLocal().posx / 32) == x or math.floor(world:getLocal().posy / 32) == y
             end
-            if getBot().status == 1 and getBot():getWorld().name:upper() == werkd:upper() then
+            if getBot().status == BotStatus.online and getBot():getWorld().name:upper() == werkd:upper() then
                 if x and y then
-                    if getBot().status == 1 and math.floor(world:getLocal().posx / 32) == x and math.floor(world:getLocal().posy / 32) == y then
+                    if getBot().status == BotStatus.online and math.floor(world:getLocal().posx / 32) == x and math.floor(world:getLocal().posy / 32) == y then
                         break
                     end
-                elseif getBot().status == 1 then
+                elseif getBot().status == BotStatus.online then
                     break
                 end
             end
@@ -1890,26 +1890,26 @@ werkd = worldnya
 end
 
 function reconnectpack(world,x,y)
-if getBot().status == 1 and getBot():getWorld().name:upper() == "EXIT" then
+if getBot().status == BotStatus.online and getBot():getWorld().name:upper() == "EXIT" then
 TagBan("**"..getBot().name:upper().." In EXIT, Now Back Saving "..pack.." In "..world.." @everyone **")
 sleep(5000)
 warp(world,WorldSavePackID)
 sleep(500)
 backpospack(world,x,y)
 end
-if getBot().status ~= 1 then
+if getBot().status ~= BotStatus.online then
 TagBan("**"..getBot().name:upper().." Was "..status().." Reconnecting... @everyone **")
 repeat
 getBot():connect()
 sleep(8000)
-until getBot().status == 1 or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
+until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
 if getBot().status == BotStatus.account_banned then 
 TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
 elseif getBot().status == BotStatus.location_banned then
 TagBan("**"..getBot():getLocal().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
-elseif getBot().status == 1 then
+elseif getBot().status == BotStatus.online then
 TagBan("**"..getBot().name:upper().." Was "..status().." Now Back To Saving "..pack.." In "..world.." @everyone **")
 sleep(5000)
 warp(world,WorldSavePackID)
@@ -1920,26 +1920,26 @@ end
 end
 
 function reconnectseed(world,x,y)
-if getBot().status == 1 and getBot():getWorld().name:upper() == "EXIT" then
+if getBot().status == BotStatus.online and getBot():getWorld().name:upper() == "EXIT" then
 TagBan("**"..getBot().name:upper().." In EXIT, Now Back Saving "..pack.." In "..world.." @everyone **")
 sleep(5000)
 warp(world,WorldSaveSeedID)
 sleep(500)
 backposseed(world,x,y)
 end
-if getBot().status ~= 1 then
+if getBot().status ~= BotStatus.online then
 TagBan("**"..getBot().name:upper().." Was "..status().." Reconnecting... @everyone **")
 repeat
 getBot():connect()
 sleep(8000)
-until getBot().status == 1 or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
+until getBot().status == BotStatus.online or getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned
 if getBot().status == BotStatus.account_banned then 
 TagBan("**"..getBot().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
 elseif getBot().status == BotStatus.location_banned then
 TagBan("**"..getBot():getLocal().name:upper().." Was "..status().." Removing Bot... @everyone**")
 banned()
-elseif getBot().status == 1 then
+elseif getBot().status == BotStatus.online then
 TagBan("**"..getBot().name:upper().." Was "..status().." Now Back To Saving Seeds In "..world.." @everyone **")
 sleep(5000)
 warp(world,WorldSaveSeedID)
@@ -2041,7 +2041,7 @@ end
 
 function saveseed()
 Kizuma = getRandom(WorldSaveSeed)
-getBot():autoCollect(4,false)
+getBot().auto_collect = false
 botpack("Saving Seeds")
 atas = getBot():getWorld().name
         warp(Kizuma,WorldSaveSeedID)
@@ -2080,7 +2080,7 @@ end
 function belicuy()
 Kizuma = getRandom(WorldSavePack)
   woloy = getBot():getWorld().name
-    getBot():autoCollect(4,false)
+    getBot().auto_collect = false
     botpack("Buying Pack..")
     warp(Kizuma,WorldSavePackID)
 rara = SeedsScanner(packitemid[1])
@@ -2181,16 +2181,16 @@ function clearTable(tbl)
 end
 
 function startwoi()
-if getBot().status == 3 or getBot().status == 4 then
+if getBot().status == BotStatus.account_banned or getBot().status == BotStatus.location_banned then
 awal = true
-removeBot(getBot().name)
 banned()
+getBot(BotBackUp).selected = true
 awal = false
 end
 while string.find(getBot():getWorld().name:upper(), "TUTORIAL") do
 sleep(5000)
 end
-if getBot().status == 1 then
+if getBot().status == BotStatus.online then
 while true do
 for index,world in pairs(worlds) do
 emoji = cekemoji()
@@ -2198,7 +2198,6 @@ rumah = world
 DataWorld()
 sleep(sleepmulai)
 takepick()
-takehose()
 getBot():warp("EXIT")
 sleep(9000)
 warpfarm(world,wid)
@@ -2219,10 +2218,11 @@ end
 botshow("Bot Start")
 trashclothes()
 antiToxic()
-gemsawal = getBot():getLocal().gems
+gemsawal = getBot().gem_count
 tt = os.time()
 ::VELISHA::
 if foregraund(seedid) > 0 then
+getBot().collect_interval = 4
 jalan()
 tambal()
 end
