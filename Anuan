@@ -1,3 +1,218 @@
+--============================= [ Rotation Nuron By Jopy Store ] =============================--
+
+Code = "6ABPi63"
+
+-- [ Webhook And MessageID Settings ] --
+WEBHOOK = {}
+WEBHOOK[1] = ""
+WEBHOOK[2] = ""
+
+MESSAGEID = {}
+MESSAGEID[1] = ""
+MESSAGEID[2] = ""
+
+-- [ Webhook Pack And TagBan ] --
+UseWebhookPackAndSeed = false
+WhPackAndSeed = ""
+MessageIDPack = ""
+
+UseWebhookTagBan = false
+WhTagBan = ""
+
+-- [ World And ID Door Settings ] --
+FarmList = "C:\\Users\\Administrator\\Desktop\\farm.txt"
+SmartSeparateWorld = true -- Bot Auto Separate The World Without Use MaxWorldPerBot
+
+MaxWorldPerBot = 12
+StartFromIndex = "1-4"
+
+-- [ Loop Settings ] --
+loop = true
+
+-- [ Harvest Tree Until Reach Level ] --
+HarvestTreeUntilReachLevel = true
+HarvestUntilLevel = 12
+
+-- [ Pnb Block Until Reach Level Settings ] --
+PnbBlockUntilReachLevel = false
+PnbUntilLevel = 12
+WorldTakeBlock = {
+    "X"
+}
+MaxWorldTakePerBot = 1
+WorldTakeBlockID = {
+    "X"
+}
+
+-- [ Break In Other World Settings ] --
+CustomPos = false
+PosX, PosY = 0, 0
+
+BreakTiles = 3 -- Support 1-5 Tile Break
+
+BreakInWorldTutor = true
+
+BreakInOtherWorld = false
+WorldBreakList = "C:\\Users\\Administrator\\Desktop\\WorldBreak.txt"
+MaxBotPerWorld = 1       -- If 0 Bot Will Auto Select World
+RandomWorldBreak = false -- Auto Change World Break Every Bot Break
+
+-- [ Auto Create World Break And Auto Change World Break Settings ] --
+AutoCreateWorldBreak = true
+
+AutoChangeWorldBreak = false
+AutoChangeEvery = 5 -- (Minutes)
+
+UseJammer = false
+AutoBuyJammerFromStore = false
+TakeJammer = false
+WorldTakeJammer = {
+    "X"
+}
+WorldTakeJammerID = {
+    "X"
+}
+MaxBotPerWorldTakeJammer = 1
+
+Lock = "WL" -- SL | WL
+AutoBuyLockFromStore = true
+TakeLock = false
+WorldTakeLock = {
+    "X"
+}
+WorldTakeLockID = {
+    "X"
+}
+MaxBotPerWorldTakeLock = 1
+
+-- [ Mode Grinder Settings ] --
+UseGrinder = false
+-- HARVESTALL : Harvest All Tree On Farm And Grinder
+-- FARMING : Farming Blocks And Save It To Storage Seed And Grinder After Few Block
+ModeGrinder = "FARMING" -- FARMING / HARVESTALL
+
+WorldGrinder = { "X" }
+WorldGrinderID = { "X" }
+
+HowManyGrindBeforeDrop = 5
+WorldDropItemGrinder = { "X" }
+WorldDropItemGrinderID = { "X" }
+
+AutoDetectTileDropItemGrinder = false
+IDPatokanDropItemGrinder = 00
+
+-- [ Separate Plant Settings ] --
+SeparatePlant = true
+
+-- [ Dont Plant Settings ] --
+DontPlant = false
+
+-- [ Auto Fill Settings ] --
+AutoFill = false
+
+-- [ Plant Profit Seed ] --
+PlantProfitSeed = false
+PlantAfterTotalSeed = 100
+WorldPlantList = "C:\\Users\\Administrator\\Desktop\\WorldPlant.txt"
+MaxWorldPlantPerBot = 1
+
+-- [ JoinOtherWorld Settings ] --
+JoinOtherWorld = false
+ListWorldForJoin = { "X", "X" }
+
+-- [ Soil Mode Settings ] --
+SoilFarmMode = false
+IgnoreGems = false
+SkipRootLevelMax = false
+
+-- [ Rest Bot Settings ] --
+RestBot = false
+TimeRest = {
+    "0:00",
+    "1:00",
+    "2:00"
+}
+SleepRest = 10 -- (Minutes)
+
+-- [ AutoBan Settings ] --
+AutoBan = false
+WhiteListBan = { "X" }
+
+-- [ Auto Leave Settings ] --
+AutoLeave = false
+MaxPeople = 0
+WhiteListLeave = { "X" }
+DelayLeave = 2 -- ( Minutes )
+
+-- [ Take Pick Settings ] --
+TakePick = false
+WorldTakePick = "PZKC5KXP"
+WorldTakePickID = "FISH"
+
+-- [ Counter Fire Settings ] --
+CounterFire = false
+WorldTakeHose = "X"
+WorldTakeHoseID = "X"
+
+-- [ World Save Settings ] --
+WorldSavePack = { "54227B82765", "93EA80088D3", "675C7CCEBD7", "A1F9807F596" }
+WorldSavePackID = { "81723B23" }
+
+AutoDetectTileDropPack = true
+IDPatokanPack = 00
+
+WorldSaveSeed = { "0EB32F86BEF", "861ACE864DA", "4B09138B93C", "EF537298CD2", "B8283ABC917", "92C542DF106",
+    "78FDC510366", "0F3345E811B", "92216109312", "3EB18B9D301" }
+WorldSaveSeedID = { "81723B23" }
+
+AutoDetectTileDropSeed = true
+IDPatokanSeed = 00
+
+-- [ Profit Settings ] --
+pack = "World Lock" -- Pack Name to display in webhook
+itemname = "surg_value_pack"
+MinimumGems = 45000 -- Bot Will Buy Pack After Minimum Gems
+packgems = 45000
+packitemid = { 1270, 4316, 4310, 1258, 4312, 4318, 4308, 1260, 1268, 4314, 1264, 1266, 1262, 4296 }
+CustomItem = {} -- Dropping Custom ID
+
+-- [ Custom Wear Item Settings ] --
+CustomWearItem = false
+ItemID = 0
+
+-- [ Method Settings ] --
+UseMethod = false
+RandomChat = false
+ChatList = {
+    "How Are You",
+    "Jopy Store",
+    "Perfect",
+    "Selling Product"
+}
+
+-- [ Auto Remove Bot When Banned ] --
+AutoRemoveBot = false
+
+-- [ Delay And Trash Settings ] --
+trashList = { 5040, 5042, 5044, 5032, 5034, 5036, 5038, 5024, 5026, 5028, 5030, 9346 }
+MaxItemToTrash = 100
+
+delaypunch = 180
+delayplace = 160
+delayplant = 80
+delayharvest = 80
+
+AttemptWarp = 25
+
+MoveInterval = 235
+DelayReconnect = 15 -- (Second)
+DelayExecute = 3    -- (Second)
+DelayWarp = 9       -- (Second)
+
+
+
+
+
 Time = {}
 berlian = {}
 pohon = {}
@@ -263,11 +478,13 @@ function fileExists(filename)
 end
 
 function updateWorldList(filename)
-    local content = read(filename)
+    local file = io.open(filename, "r")
+    local content = file:read("*all")
+    file:close()
 
     local worlds = {}
-    for line in content:gmatch("[^\r\n]+") do
-        table.insert(worlds, line)
+    for baris in content:gmatch("[^\r\n]+") do
+        table.insert(worlds, baris)
     end
 
     if #worlds > 0 then
@@ -277,7 +494,6 @@ function updateWorldList(filename)
         table.insert(worlds, firstWorld)
 
         local updatedContent = table.concat(worlds, "\n")
-
         write(filename, updatedContent)
     else
         print("No worlds found in the file.")
@@ -9776,9 +9992,3 @@ elseif not SmartSeparateWorld then
 elseif SmartSeparateWorld then
     startwoi2()
 end
-
-
-
-
-
-
