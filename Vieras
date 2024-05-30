@@ -42,8 +42,6 @@ if Code == "" or Code == nil then
     return
 end
 
-delayexe = DelayExecute * 1000
-sleep( delayexe * ( getBot().index - ( 1 - 1 )))
 httpClient = HttpClient.new()
 httpClient:setMethod(Method.get)
 httpClient.url = "https://rentry.co/benerilang/raw"
